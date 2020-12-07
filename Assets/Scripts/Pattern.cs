@@ -61,18 +61,81 @@ public class PatternManager
                 },
                 PatternType.PatternB
                 );
+   
+    }
 
-}
-    
-     //
 
-    /// <summary>
-    /// Use this method rather than adding directly to the _patterns field. This method will check if the pattern is valid and can be added to the list. Invalid input will be refused.
-    /// </summary>
-    /// <param name="indices">List of indices that define the patter. The indices should always relate to Vector3In(0,0,0) as anchor point</param>
-    /// <param name="type">The PatternType of this pattern to add. Each type can only exist once</param>
-    /// <returns></returns>
-    public bool AddPattern(List<Vector3Int> indices, PatternType type)
+
+
+            /* define the voxelstate for pattern B
+             * if the voxel's Y is even, it become available ,  else the voxel's Y is odd, it become occupied
+
+               int y = Random.Range(0.8);
+               if (y % 2 == 0)         
+               {
+                  VoxelState.Available;
+               }
+               else
+               {
+                  VoxelState.Occupied;
+               }
+               return;
+               }
+
+            */
+
+
+
+
+
+            /* define which direction to add next PatternB for   Y even voxel in PatternB
+             * 
+
+         private  PatternManager()
+            {
+                _patterns = new List<Pattern>();
+
+                List<Voxel> patternB = new List<Voxel>();
+                patternB.Add(new Voxel(new Vector3Int(0, 0, 0), new List<Vector3Int>()
+                {
+                    new Vector3Int(0, 0, 1),   
+                }));
+                patternB.Add(new Voxel(new Vector3Int(0, 2, 0), new List<Vector3Int>()
+                {
+                    new Vector3Int(1, 0, 0),
+                }));
+
+                patternB.Add(new Voxel(new Vector3Int(0, 4, 0), new List<Vector3Int>()
+                {
+                    new Vector3Int(0, 0, -1),
+                }));
+
+                patternB.Add(new Voxel(new Vector3Int(0, 6, 0), new List<Vector3Int>()
+                {
+                    new Vector3Int(-1,0,0) ,
+                }));
+                patternB.Add(new Voxel(new Vector3Int(0, 8, 0), new List<Vector3Int>()
+                {
+                    new Vector3Int(0,0,1) ,
+                }));
+
+                AddPattern(patternB, PatternType.PatternB);
+
+            }
+            */
+
+
+
+
+            //
+
+            /// <summary>
+            /// Use this method rather than adding directly to the _patterns field. This method will check if the pattern is valid and can be added to the list. Invalid input will be refused.
+            /// </summary>
+            /// <param name="indices">List of indices that define the patter. The indices should always relate to Vector3In(0,0,0) as anchor point</param>
+            /// <param name="type">The PatternType of this pattern to add. Each type can only exist once</param>
+            /// <returns></returns>
+            public bool AddPattern(List<Vector3Int> indices, PatternType type)
 {
 
     //only add valid patterns

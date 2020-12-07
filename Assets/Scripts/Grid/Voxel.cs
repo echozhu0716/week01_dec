@@ -8,6 +8,8 @@ public class Voxel
     #region Public fields
     public Vector3Int Index;
     public List<Face> Faces = new List<Face>(6);
+  //public List<Vector3Int> VoxelDirections;
+
 
 
     #endregion
@@ -93,8 +95,14 @@ public class Voxel
         _goVoxel = GameObject.Instantiate(goVoxel, Centre, Quaternion.identity);
         _goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;
         _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
+
         Status = VoxelState.Available;
     }
+
+
+
+
+
     #endregion
 
     #region Public methods
