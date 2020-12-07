@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BruteForceFiller : MonoBehaviour
 {
-    private float _voxelSize = 0.2f;
+    private float _voxelSize = 0.5f;
     private int _voxelOffset = 2;
     private int _triesPerIteration = 2500;
     private int _iterations = 100;
@@ -135,8 +135,13 @@ public class BruteForceFiller : MonoBehaviour
     /// <returns>returns true if it managed to add the block to the grid</returns>
     private bool TryAddRandomBlock()
     {
-        _grid.SetRandomType();
-        _grid.AddBlock(RandomIndex(), RandomRotation());
+        if (_grid.FirstBlock) _grid.AddBlock(RandomIndex(), RandomRotation());
+        else
+        {
+            List<Voxel> connectionVox = _grid.GetConnectionVoxels();
+            int index = Random.Range(0, connectionVox.Count);
+            _grid.AddBlock(connectionVox[index].Index, RandomRotation());
+        }
         bool blockAdded = _grid.TryAddCurrentBlocksToGrid();
         Debug.Log("HEllo");
         _grid.PurgeUnplacedBlocks();

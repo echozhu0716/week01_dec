@@ -13,6 +13,8 @@ public class Block
     private VoxelGrid _grid;
     private GameObject _goBlock;
 
+    Dictionary<Voxel, List<Vector3Int>> possibleOrentations;
+
     public Vector3Int Anchor;
     public Quaternion Rotation;
     private bool _placed = false;
@@ -24,8 +26,12 @@ public class Block
         get
         {
             if (_placed) return BlockState.Placed;
-            if (Voxels.Count < _pattern.Indices.Count) return BlockState.OutOfBounds;
-            if (Voxels.Count(v => v.Status != VoxelState.Available) > 0) return BlockState.Intersecting;
+            if (Voxels.Count < _pattern.Voxels.Count) return BlockState.OutOfBounds;
+            if (Voxels.Count(v => v.Status != VoxelState.Available && v.Status != VoxelState.Connection) > 0)
+            {
+                if (Voxels[0].Status == VoxelState.Connection) return BlockState.Valid;
+                return BlockState.Intersecting;
+            }
             return BlockState.Valid;
         }
     }
@@ -51,12 +57,21 @@ public class Block
     /// </summary>
     public void PositionPattern()
     {
+        possibleOrentations = new Dictionary<Voxel, List<Vector3Int>>();
         Voxels = new List<Voxel>();
-        foreach (var index in _pattern.Indices)
+        foreach (var patternVoxel in _pattern.Voxels)
         {
-            if (Util.TryOrientIndex(index, Anchor, Rotation, _grid, out var newIndex))
+            if (Util.TryOrientIndex(patternVoxel.Index, Anchor, Rotation, _grid, out var newIndex))
             {
-                Voxels.Add(_grid.Voxels[newIndex.x, newIndex.y, newIndex.z]);
+                Voxel gridVoxel = _grid.Voxels[newIndex.x, newIndex.y, newIndex.z];
+                Voxels.Add(gridVoxel);
+                List<Vector3Int> voxelDirections = new List<Vector3Int>();
+                foreach (var direction in patternVoxel.VoxelDirections)
+                {
+                    Util.TryOrientRotation(direction, Rotation, out var newDirection);
+                    voxelDirections.Add(newDirection);
+                }
+                possibleOrentations.Add(gridVoxel, patternVoxel.VoxelDirections);
             }
         }
     }
@@ -76,7 +91,15 @@ public class Block
 
         foreach (var voxel in Voxels)
         {
-            voxel.Status = VoxelState.Alive;
+            voxel.VoxelDirections = possibleOrentations[voxel];
+            if (voxel.HasAvailableConnetions)
+            {
+                voxel.Status = VoxelState.Connection;
+            }
+            else
+            {
+                voxel.Status = VoxelState.Alive;
+            }
             voxel.SetColor(randomCol);
         }
         CreateGOBlock();

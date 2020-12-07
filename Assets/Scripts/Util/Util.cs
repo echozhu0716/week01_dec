@@ -23,6 +23,11 @@ public static class Util
         return CheckBounds(worldIndex,grid);
     }
 
+    public static void TryOrientRotation(Vector3Int originalAxis, Quaternion rotation, out Vector3Int newAxis) //NEW-------------------Function!
+    {
+        newAxis = (rotation * originalAxis).ToVector3IntRound();
+    }
+
     /// <summary>
     /// Check if a given index is inside or outside the voxelgrid
     /// </summary>

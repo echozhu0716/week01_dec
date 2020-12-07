@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum VoxelState { Dead = 0, Alive = 1, Available = 2 }
+public enum VoxelState { Dead = 0, Alive = 1, Available = 2, Connection = 3 }
 public class Voxel
 {
     #region Public fields
     public Vector3Int Index;
     public List<Face> Faces = new List<Face>(6);
-  //public List<Vector3Int> VoxelDirections;
+
+    public List<Vector3Int> VoxelDirections;
+
 
 
 
@@ -24,6 +26,7 @@ public class Voxel
     #endregion
 
     #region Public accessors
+    public bool HasAvailableConnetions => VoxelDirections.Count > 0;
     public List<Corner> Corners
     {
         get
@@ -95,8 +98,14 @@ public class Voxel
         _goVoxel = GameObject.Instantiate(goVoxel, Centre, Quaternion.identity);
         _goVoxel.GetComponent<VoxelTrigger>().TriggerVoxel = this;
         _goVoxel.transform.localScale = Vector3.one * _grid.VoxelSize * 0.95f;
-
+        VoxelDirections = new List<Vector3Int>();
         Status = VoxelState.Available;
+    }
+
+    public Voxel(Vector3Int index)
+    {
+        Index = index;
+        VoxelDirections = new List<Vector3Int>();
     }
 
 

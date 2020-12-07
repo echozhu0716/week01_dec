@@ -29,6 +29,8 @@ public class VoxelGrid
     #endregion
 
     #region Public dynamic getters
+    public bool FirstBlock => _blocks.Count == 0;
+
     public bool ShowVoxels
     {
         get
@@ -389,6 +391,11 @@ public class VoxelGrid
         {
             if (!BoundingMesh.IsInsideCentre(voxel)) voxel.Status = VoxelState.Dead;
         }
+    }
+
+    public List<Voxel> GetConnectionVoxels()
+    {
+        return FlattenedVoxels.Where(v => v.Status == VoxelState.Connection).ToList();
     }
 
     #endregion
